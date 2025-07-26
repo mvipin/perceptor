@@ -4,11 +4,11 @@
     <gazebo>
         <plugin name="gz::sim::systems::DiffDrive" filename="gz-sim-diff-drive-system">
 
-            <!-- Wheel Information -->
+            <!-- Wheel Information - Create 2 Robot Parameters -->
             <left_joint>left_wheel_joint</left_joint>
             <right_joint>right_wheel_joint</right_joint>
-            <wheel_separation>0.297</wheel_separation>
-            <wheel_radius>0.033</wheel_radius>
+            <wheel_separation>0.235</wheel_separation>  <!-- Create 2 specification -->
+            <wheel_radius>0.036</wheel_radius>          <!-- Create 2 specification -->
 
 
             <!-- Limits -->

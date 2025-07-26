@@ -74,19 +74,16 @@ Visualization Manager:
       Tree:
         odom:
           base_link:
-            chassis:
-              camera_link:
-                camera_link_optical:
-                  {}
-              caster_wheel:
-                {}
-              face_link:
-                {}
-              laser_frame:
-                {}
-            left_wheel:
+            laser:
               {}
-            right_wheel:
+            camera_link:
+              camera_link_optical:
+                {}
+            left_wheel_link:
+              {}
+            right_wheel_link:
+              {}
+            front_wheel_link:
               {}
       Update Interval: 0
       Value: true
@@ -112,6 +109,12 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+          Value: true
+        laser:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         camera_link:
           Alpha: 1
           Show Axes: false
@@ -121,22 +124,18 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        caster_wheel:
+          Value: true
+        left_wheel_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        chassis:
+        right_wheel_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        face_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        laser_frame:
+        front_wheel_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false

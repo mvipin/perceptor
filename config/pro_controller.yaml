@@ -1,0 +1,32 @@
+---
+joy_teleop:
+  ros__parameters:
+    slow:
+      type: topic
+      topic_name: cmd_vel
+      interface_type: geometry_msgs/msg/Twist
+      deadman_buttons: [3]   # Y button
+      axis_mappings:
+        angular-z:
+          axis: 0    # Left stick left/right
+          offset: 0.0
+          scale: 1.2
+        linear-x:
+          axis: 1    # Left stick up/down
+          offset: 0.0
+          scale: 0.2
+
+    fast:
+      type: topic
+      topic_name: cmd_vel
+      interface_type: geometry_msgs/msg/Twist
+      deadman_buttons: [3]   # Also Y button
+      axis_mappings:
+        angular-z:
+          axis: 0
+          offset: 0.0
+          scale: 2.4
+        linear-x:
+          axis: 1
+          offset: 0.0
+          scale: 0.4

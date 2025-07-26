@@ -48,29 +48,23 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        base_footprint:
-          Value: true
         base_link:
+          Value: true
+        laser:
           Value: true
         camera_link:
           Value: true
         camera_link_optical:
           Value: true
-        caster_wheel:
+        left_wheel_link:
           Value: true
-        chassis:
+        right_wheel_link:
           Value: true
-        face_link:
-          Value: true
-        laser_frame:
-          Value: true
-        left_wheel:
+        front_wheel_link:
           Value: true
         map:
           Value: true
         odom:
-          Value: true
-        right_wheel:
           Value: true
       Marker Scale: 1
       Name: TF
@@ -82,21 +76,16 @@ Visualization Manager:
           {}
         odom:
           base_link:
-            base_footprint:
+            laser:
               {}
-            chassis:
-              camera_link:
-                camera_link_optical:
-                  {}
-              caster_wheel:
+            camera_link:
+              camera_link_optical:
                 {}
-              face_link:
-                {}
-              laser_frame:
-                {}
-            left_wheel:
+            left_wheel_link:
               {}
-            right_wheel:
+            right_wheel_link:
+              {}
+            front_wheel_link:
               {}
       Update Interval: 0
       Value: true

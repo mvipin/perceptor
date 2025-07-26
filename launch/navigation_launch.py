@@ -1,3 +1,66 @@
+"""
+Navigation Launch Configuration
+
+This launch file configures and starts the complete Nav2 navigation stack for autonomous
+robot navigation. It provides path planning, obstacle avoidance, behavior coordination,
+and motion control capabilities that enable the robot to navigate safely from one location
+to another in a known environment.
+
+The navigation system works in conjunction with localization to provide full autonomous
+navigation capabilities. It includes global and local path planners, behavior trees for
+decision making, and various recovery behaviors for handling navigation failures.
+
+Key Nav2 components launched:
+1. Controller Server: Executes path following and obstacle avoidance
+2. Smoother Server: Smooths planned paths for better execution
+3. Planner Server: Computes global paths from start to goal
+4. Behavior Server: Handles recovery behaviors (backup, spin, wait)
+5. BT Navigator: Coordinates navigation using behavior trees
+6. Waypoint Follower: Manages sequential waypoint navigation
+7. Velocity Smoother: Smooths velocity commands for better control
+
+The system supports both regular nodes and composable nodes for performance optimization.
+Composable nodes run in a single process to reduce overhead and improve real-time performance.
+
+Nodes launched:
+- controller_server: Path following and local obstacle avoidance
+- smoother_server: Path smoothing for better trajectory execution
+- planner_server: Global path planning (A*, RRT*, etc.)
+- behavior_server: Recovery behaviors and navigation actions
+- bt_navigator: Behavior tree-based navigation coordination
+- waypoint_follower: Sequential waypoint navigation management
+- velocity_smoother: Velocity command smoothing and limiting
+- lifecycle_manager_navigation: Coordinates navigation node lifecycle
+
+Command-line equivalents:
+    # Controller Server
+    ros2 run nav2_controller controller_server --ros-args \
+        --params-file <nav2_params.yaml> \
+        -r cmd_vel:=cmd_vel_nav
+
+    # Planner Server
+    ros2 run nav2_planner planner_server --ros-args \
+        --params-file <nav2_params.yaml>
+
+    # Behavior Server
+    ros2 run nav2_behaviors behavior_server --ros-args \
+        --params-file <nav2_params.yaml>
+
+    # BT Navigator
+    ros2 run nav2_bt_navigator bt_navigator --ros-args \
+        --params-file <nav2_params.yaml>
+
+    # Lifecycle Manager
+    ros2 run nav2_lifecycle_manager lifecycle_manager --ros-args \
+        -p node_names:="['controller_server', 'planner_server', 'behavior_server', 'bt_navigator']"
+
+Usage:
+    ros2 launch perceptor navigation_launch.py \
+        [use_sim_time:=true/false] \
+        [params_file:=<nav2_params.yaml>] \
+        [use_composition:=true/false]
+"""
+
 # Copyright (c) 2018 Intel Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,33 +90,43 @@ from nav2_common.launch import RewrittenYaml
 
 
 def generate_launch_description():
-    # Get the launch directory
-    bringup_dir = get_package_share_directory('articubot_one')
+    """
+    Generate the launch description for the Nav2 navigation stack.
 
-    namespace = LaunchConfiguration('namespace')
-    use_sim_time = LaunchConfiguration('use_sim_time')
-    autostart = LaunchConfiguration('autostart')
-    params_file = LaunchConfiguration('params_file')
-    use_composition = LaunchConfiguration('use_composition')
-    container_name = LaunchConfiguration('container_name')
-    container_name_full = (namespace, '/', container_name)
-    use_respawn = LaunchConfiguration('use_respawn')
-    log_level = LaunchConfiguration('log_level')
+    Returns:
+        LaunchDescription: Complete launch configuration for autonomous navigation
+    """
 
-    lifecycle_nodes = ['controller_server',
-                       'smoother_server',
-                       'planner_server',
-                       'behavior_server',
-                       'bt_navigator',
-                       'waypoint_follower',
-                       'velocity_smoother']
+    # Package directory for resource location
+    bringup_dir = get_package_share_directory('perceptor')
 
-    # Map fully qualified names to relative ones so the node's namespace can be prepended.
-    # In case of the transforms (tf), currently, there doesn't seem to be a better alternative
-    # https://github.com/ros/geometry2/issues/32
-    # https://github.com/ros/robot_state_publisher/pull/30
-    # TODO(orduno) Substitute with `PushNodeRemapping`
-    #              https://github.com/ros2/launch_ros/issues/56
+    # Launch configuration parameters for runtime customization
+    namespace = LaunchConfiguration('namespace')          # Node namespace for multi-robot
+    use_sim_time = LaunchConfiguration('use_sim_time')   # Time synchronization mode
+    autostart = LaunchConfiguration('autostart')         # Automatic node activation
+    params_file = LaunchConfiguration('params_file')     # Navigation parameters file
+    use_composition = LaunchConfiguration('use_composition')  # Composable vs regular nodes
+    container_name = LaunchConfiguration('container_name')    # Container name for composable nodes
+    container_name_full = (namespace, '/', container_name)    # Full container name with namespace
+    use_respawn = LaunchConfiguration('use_respawn')     # Node respawn on failure
+    log_level = LaunchConfiguration('log_level')         # Logging verbosity level
+
+    # Navigation lifecycle nodes managed by the lifecycle manager
+    # These nodes follow the ROS 2 lifecycle pattern for coordinated startup/shutdown
+    # Order matters for proper initialization sequence
+    lifecycle_nodes = [
+        'controller_server',    # Path following and obstacle avoidance
+        'smoother_server',      # Path smoothing for better execution
+        'planner_server',       # Global path planning algorithms
+        'behavior_server',      # Recovery behaviors and navigation actions
+        'bt_navigator',         # Behavior tree coordination and decision making
+        'waypoint_follower',    # Sequential waypoint navigation management
+        'velocity_smoother'     # Velocity command smoothing and limiting
+    ]
+
+    # Transform topic remappings for namespace compatibility
+    # Maps global transform topics to local namespace for multi-robot support
+    # Required for proper coordinate frame handling in namespaced environments
     remappings = [('/tf', 'tf'),
                   ('/tf_static', 'tf_static')]
 

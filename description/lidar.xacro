@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
 
+    <xacro:include filename="inertial_macros.xacro"/>
+
+    <!-- LiDAR mounted at geometric center, 200mm above base_link -->
     <joint name="laser_joint" type="fixed">
-        <parent link="chassis"/>
-        <child link="laser_frame"/>
-        <origin xyz="0.122 0 0.212" rpy="0 0 0"/>
+        <parent link="base_link"/>
+        <child link="laser"/>
+        <origin xyz="0 0 0.2" rpy="0 0 0"/>
     </joint>
 
-    <link name="laser_frame">
+    <link name="laser">
         <visual>
             <geometry>
                 <cylinder radius="0.05" length="0.04"/>
@@ -31,9 +34,7 @@
         </xacro:inertial_cylinder>
     </link>
 
-
-
-    <gazebo reference="laser_frame">
+    <gazebo reference="laser">
         <material>Gazebo/Black</material>
 
         <sensor name="laser" type="gpu_lidar">
@@ -49,12 +50,12 @@
                     </horizontal>
                 </scan>
                 <range>
-                    <min>0.3</min>
+                    <min>0.15</min>
                     <max>12</max>
                 </range>
             </lidar>
             <topic>scan</topic>
-            <gz_frame_id>laser_frame</gz_frame_id>
+            <frame_id>laser</frame_id>
         </sensor>
     </gazebo>
 

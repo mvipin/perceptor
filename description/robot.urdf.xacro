@@ -1,21 +1,35 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro"  name="robot">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="perceptor">
 
+    <!-- Launch arguments for mode selection -->
     <xacro:arg name="use_ros2_control" default="true"/>
-    <xacro:arg name="sim_mode" default="false"/>
+    <xacro:arg name="use_sim_time" default="false"/>
 
-    <xacro:include filename="robot_core.xacro" />
+    <!-- Include Create robot base description -->
+    <xacro:include filename="$(find create_description)/urdf/create_base.urdf.xacro" />
 
-    <xacro:if value="$(arg use_ros2_control)">
-        <xacro:include filename="ros2_control.xacro" />
+    <!-- Create robot base with Create 2 specifications -->
+    <xacro:create_base wheel_separation="0.235" base_diameter="0.3485">
+        <mesh filename="package://create_description/meshes/create_2.dae" />
+        <!-- Alternative cylinder geometry for experimentation -->
+        <!-- <cylinder length="0.0611632" radius="0.16495" /> -->
+    </xacro:create_base>
+
+    <!-- Mode-specific control configuration -->
+    <!-- Simulation mode: Control is handled by Create robot base (create_base_gazebo.urdf.xacro) -->
+    <!-- Real robot mode: Control is handled by external create_driver -->
+    <xacro:if value="$(arg use_sim_time)">
+        <!-- Simulation mode: Choose control method -->
+        <xacro:if value="$(arg use_ros2_control)">
+            <!-- Complex control: Full ros2_control stack (advanced users only) -->
+            <xacro:include filename="ros2_control.xacro" />
+        </xacro:if>
+        <!-- Note: Simple control is now handled by create_base_gazebo.urdf.xacro -->
+        <!-- No additional control files needed for basic differential drive -->
     </xacro:if>
-    <xacro:unless value="$(arg use_ros2_control)">
-        <xacro:include filename="gazebo_control.xacro" />
-    </xacro:unless>
+
+    <!-- Sensor integration -->
     <xacro:include filename="lidar.xacro" />
     <xacro:include filename="camera.xacro" />
-    <!-- <xacro:include filename="depth_camera.xacro" /> -->
 
-    <xacro:include filename="face.xacro" />
-    
 </robot>

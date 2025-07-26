@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <xacro:unless value="$(arg sim_mode)">
+    <xacro:unless value="$(arg use_sim_time)">
         <ros2_control name="RealRobot" type="system">
             <hardware>
                 <plugin>diffdrive_arduino/DiffDriveArduinoHardware</plugin>
@@ -32,7 +32,7 @@
         </ros2_control>
     </xacro:unless>
 
-    <xacro:if value="$(arg sim_mode)">
+    <xacro:if value="$(arg use_sim_time)">
         <ros2_control name="GazeboSystem" type="system">
             <hardware>
                 <plugin>gz_ros2_control/GazeboSimSystem</plugin>
@@ -56,10 +56,13 @@
         </ros2_control>
     </xacro:if>
 
-    <gazebo>
+    <gazebo reference="base_link">
         <plugin name="gz_ros2_control::GazeboSimROS2ControlPlugin" filename="libgz_ros2_control-system.so">
-            <parameters>$(find articubot_one)/config/my_controllers.yaml</parameters>
-            <parameters>$(find articubot_one)/config/gaz_ros2_ctl_use_sim.yaml</parameters>
+            <parameters>$(find perceptor)/config/my_controllers.yaml</parameters>
+            <parameters>$(find perceptor)/config/gaz_ros2_ctl_use_sim.yaml</parameters>
+            <ros>
+                <namespace></namespace>
+            </ros>
         </plugin>
     </gazebo>
 
