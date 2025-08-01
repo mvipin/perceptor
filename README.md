@@ -536,12 +536,6 @@ ros2 topic echo /global_costmap/costmap --once
 ros2 topic echo /speed_filter_info --once
 ```
 
-**Architecture Benefits:**
-- **Modular Design**: Speed limits can be added/removed independently from navigation
-- **Simultaneous Filters**: Works alongside keepout zones without conflicts
-- **Dynamic Speed Control**: Real-time speed adjustments based on robot location
-- **Safety Enhancement**: Automatic speed reduction in sensitive areas
-
 **Technical Note - Speed Filter Behavior:**
 The speed filter operates by:
 - **Proportional Scaling**: Speed multipliers are applied based on mask grayscale values
@@ -585,56 +579,91 @@ ros2 topic info /speed_filter_info --verbose
 Waypoint navigation enables the robot to follow a sequence of predefined points, creating complex patrol routes, inspection paths, or multi-destination missions. The waypoint follower manages the sequence and handles failures gracefully.
 
 **Implementation:**
-The waypoint_follower node coordinates with the navigation stack to execute sequential navigation goals, providing feedback on completion status and handling waypoint-specific behaviors.
+The waypoint follower functionality is **enabled** through the Perceptor robot's nav2_params.yaml configuration. No additional launch files or command-line tools are needed - waypoint navigation is controlled entirely through RViz's intuitive graphical interface.
 
-**Package Dependencies:**
+**Key Advantage:**
+RViz's Nav2 plugin provides a visual, point-and-click interface for setting waypoints directly on the map, making waypoint navigation accessible without programming knowledge.
+
+### Setting Waypoints with RViz Interface
+
+**Step-by-Step Waypoint Navigation:**
+
+1. **Launch Navigation Stack** (standard 3-terminal setup):
 ```bash
-# Waypoint navigation support
-sudo apt install ros-jazzy-nav2-waypoint-follower ros-jazzy-nav2-lifecycle-manager
+# Terminal 1: Robot base and LiDAR
+ros2 launch perceptor launch_robot.launch.py enable_camera:=false
+
+# Terminal 2: AMCL localization with main navigation map
+ros2 launch perceptor localization_launch.py \
+  map:=/home/pi/Roomba/slam_dev_ws/src/perceptor/maps/home.yaml \
+  params_file:=/home/pi/Roomba/slam_dev_ws/src/perceptor/config/nav2_params.yaml
+
+# Terminal 3: Navigation stack (path planning and controllers)
+ros2 launch perceptor navigation_launch.py \
+  params_file:=/home/pi/Roomba/slam_dev_ws/src/perceptor/config/nav2_params.yaml
 ```
 
-**Configuration Parameters:**
+2. **Open RViz** and ensure Nav2 plugin is loaded:
+   ```bash
+   rviz2 -d /opt/ros/jazzy/share/nav2_bringup/rviz/nav2_default_view.rviz
+   ```
+
+3. **Set Initial Robot Pose**:
+   - Click **"2D Pose Estimate"** tool in RViz toolbar
+   - Click and drag on map to set robot's starting position and orientation
+   - Verify AMCL particle cloud converges around robot
+
+4. **Add Waypoints Visually**:
+   - Click **"Waypoint Mode"** button in Nav2 panel (or use "Nav2 Goal" tool)
+   - Click on map locations where you want the robot to visit
+   - Each click adds a waypoint to the sequence
+   - Waypoints appear as numbered markers on the map
+
+5. **Start Waypoint Following**:
+   - Click **"Start Waypoint Following"** button in Nav2 panel
+   - Robot will navigate to each waypoint in sequence
+   - Progress is shown in RViz with path visualization and status updates
+
+**Integration with Navigation Features:**
+- **Keepout Zone Awareness**: Waypoints automatically avoid restricted areas
+- **Speed Zone Compliance**: Robot adjusts speed appropriately during waypoint navigation
+- **Dynamic Obstacle Avoidance**: Real-time path adjustments around moving obstacles
+- **Recovery Behaviors**: Automatic retry and recovery on navigation failures
+
+**Configuration Parameters** (already enabled in nav2_params.yaml):
 ```yaml
-# waypoint_params.yaml
 waypoint_follower:
-  loop_rate: 20.0  # Hz
-  stop_on_failure: false  # Continue to next waypoint on failure
-  waypoint_task_executor_plugin: "wait_at_waypoint"
-
-wait_at_waypoint:
-  plugin: "nav2_waypoint_follower::WaitAtWaypoint"
-  enabled: True
-  waypoint_pause_duration: 5000  # milliseconds to wait at each waypoint
+  ros__parameters:
+    loop_rate: 20.0
+    stop_on_failure: false
+    waypoint_task_executor_plugin: "wait_at_waypoint"
+    wait_at_waypoint:
+      plugin: "nav2_waypoint_follower::WaitAtWaypoint"
+      enabled: True
+      waypoint_pause_duration: 2000  # 2 seconds pause at each waypoint
 ```
 
-**Launch Commands:**
+**Advanced Waypoint Features:**
+- **Looped Patrol Routes**: Set `stop_on_failure: false` for continuous patrol
+- **Custom Pause Durations**: Adjust wait time at each waypoint as needed
+- **Failure Recovery**: Automatic retry and alternative path planning
+- **Multi-Goal Coordination**: Seamless integration with single-goal navigation
+
+**Troubleshooting Waypoint Navigation:**
 ```bash
-# Start waypoint navigation
-ros2 launch nav2_bringup navigation_launch.py use_sim_time:=false
+# Check waypoint follower status
+ros2 lifecycle get /waypoint_follower
 
-# Follow waypoint sequence (programmatic)
-ros2 run nav2_waypoint_follower waypoint_follower \
-  --ros-args --params-file src/perceptor/config/waypoint_params.yaml
+# Monitor waypoint execution
+ros2 topic echo /waypoint_follower/transition_event
 
-# Send waypoint sequence via action
-ros2 action send_goal /follow_waypoints nav2_msgs/action/FollowWaypoints \
-  "{poses: [{header: {frame_id: map}, pose: {position: {x: 1.0, y: 1.0, z: 0.0}}}]}"
+# View current waypoint action status
+ros2 action list | grep waypoint
 ```
-
-**Waypoint Definition Methods:**
-1. **Programmatic**: Define waypoints in code using action clients
-2. **RViz Interface**: Use Nav2 panel to set and send waypoint sequences
-3. **YAML Configuration**: Pre-define patrol routes in configuration files
-
-**Waypoint Parameters:**
-- `waypoint_pause_duration`: Time to wait at each waypoint (ms)
-- `stop_on_failure`: Behavior when waypoint navigation fails
-- `loop_rate`: Waypoint follower update frequency (Hz)
-- `waypoint_tolerance`: Acceptable distance to waypoint (m)
 
 **Multimedia Placeholders:**
-- 📹 **[Waypoint navigation demo video]** - Robot following multi-point patrol route
-- 📊 **[RViz waypoint interface screenshots]** - Setting waypoints via Nav2 panel
+- � **[RViz waypoint interface demo]** - Visual waypoint setting and execution
+- 📊 **[Multi-waypoint patrol screenshots]** - Complex route planning examples
 
 **Reference:** [Nav2 Waypoint Follower Tutorial](https://docs.nav2.org/tutorials/docs/navigation2_with_waypoint_follower.html)
 
