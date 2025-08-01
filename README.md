@@ -4,7 +4,7 @@
 [![Platform](https://img.shields.io/badge/Platform-Raspberry%20Pi%205-red.svg)](https://www.raspberrypi.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-A comprehensive ROS2 robotics platform for autonomous navigation, SLAM mapping, and sensor fusion using an iRobot Create 2 base with integrated LiDAR sensor. Designed for educational robotics, research applications, and maker projects with full simulation support and real hardware deployment capabilities.
+A comprehensive ROS2 robotics platform for autonomous navigation, SLAM mapping, and sensor fusion using an iRobot Create 2 base with integrated LiDAR sensor. Features include advanced autonomous navigation with keepout zones, variable speed limits, visual waypoint navigation, real-time collision monitoring, and multi-sensor fusion using Extended Kalman Filter (EKF). Designed for educational robotics, research applications, and maker projects with full simulation support and real hardware deployment capabilities.
 
 ## 🚀 Quick Start
 
@@ -66,7 +66,6 @@ ros2 run rviz2 rviz2 -d src/perceptor/config/main.rviz
   - [Software Debugging](#software-debugging)
 
 ### **Additional Resources**
-  - [📁 Package Structure](#-package-structure)
   - [Acknowledgments](#acknowledgments)
   - [Contributing](#contributing)
   - [License](#license)
@@ -1061,25 +1060,6 @@ ros2 service call /slam_toolbox/save_map slam_toolbox/srv/SaveMap "{name: {data:
 # Navigation debugging
 ros2 topic echo /cmd_vel  # Monitor velocity commands
 ros2 topic echo /amcl_pose  # Check localization
-```
-
-
-
-## 📁 Package Structure
-
-```
-perceptor/
-├── config/           # Configuration files
-│   ├── pro_controller.yaml    # Nintendo Pro Controller config
-│   ├── twist_mux.yaml        # Command multiplexer config
-│   └── main.rviz            # RViz visualization config
-├── launch/           # Launch files
-│   ├── launch_robot.launch.py   # Main robot launch (integrated)
-│   ├── launch_sim.launch.py     # Simulation launch
-│   ├── joystick.launch.py       # Joystick control
-│   └── sensors.launch.py        # Sensor systems
-├── description/      # Robot description (URDF/Xacro)
-└── worlds/          # Gazebo simulation worlds
 ```
 
 ---
