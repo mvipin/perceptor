@@ -26,13 +26,50 @@ ros2 run rviz2 rviz2 -d src/perceptor/config/main.rviz
 
 ## 📋 Table of Contents
 
-1. [Basic Robot Bringup and Teleoperation](#1-basic-robot-bringup-and-teleoperation)
-2. [LiDAR Integration](#2-lidar-integration)
-3. [SLAM Mapping and Localization](#3-slam-mapping-and-localization)
-4. [Autonomous Navigation](#4-autonomous-navigation)
-5. [Sensor Fusion (Odometry + IMU)](#5-sensor-fusion-odometry--imu)
-6. [Installation and Setup](#installation-and-setup)
-7. [Troubleshooting](#troubleshooting)
+- [🚀 Quick Start](#-quick-start)
+
+### **1. [Basic Robot Bringup and Teleoperation](#1-basic-robot-bringup-and-teleoperation)**
+  - [Hardware Components](#hardware-components)
+  - [Software Components](#software-components)
+  - [Launch File Usage](#launch-file-usage)
+
+### **2. [LiDAR Integration](#2-lidar-integration)**
+  - [Hardware Components](#hardware-components-1)
+  - [Software Components](#software-components-1)
+  - [Advanced Features](#advanced-features)
+
+### **3. [SLAM Mapping and Localization](#3-slam-mapping-and-localization)**
+  - [SLAM Algorithm Features](#slam-algorithm-features)
+  - [Mapping Capabilities](#mapping-capabilities)
+  - [Localization Systems](#localization-systems)
+
+### **4. [Autonomous Navigation](#4-autonomous-navigation)**
+  - [Core Navigation Stack](#core-navigation-stack)
+  - [**Navigating with Keepout Zones**](#navigating-with-keepout-zones)
+  - [**Navigating with Speed Limits**](#navigating-with-speed-limits)
+  - [**Waypoint Navigation**](#waypoint-navigation)
+  - [**Collision Monitor**](#collision-monitor)
+  - [Advanced Navigation Features](#advanced-navigation-features)
+
+### **5. [Sensor Fusion (Odometry + IMU)](#5-sensor-fusion-odometry--imu)**
+  - [Multi-sensor Integration](#multi-sensor-integration)
+  - [Hardware Components](#hardware-components-2)
+  - [EKF Configuration](#ekf-configuration)
+
+### **6. [Installation and Setup](#installation-and-setup)**
+  - [Prerequisites](#prerequisites)
+  - [Complete Installation Guide](#complete-installation-guide)
+  - [Package Dependencies Summary](#package-dependencies-summary)
+
+### **7. [Troubleshooting](#troubleshooting)**
+  - [Common Hardware Issues](#common-hardware-issues)
+  - [Software Debugging](#software-debugging)
+
+### **Additional Resources**
+  - [📁 Package Structure](#-package-structure)
+  - [Acknowledgments](#acknowledgments)
+  - [Contributing](#contributing)
+  - [License](#license)
 
 ---
 
