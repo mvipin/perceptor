@@ -486,14 +486,91 @@ speed_zones:
     max_speed: 0.8  # 0.8 m/s maximum
 ```
 
-**Launch Commands:**
+**Modular 5-Terminal Launch Sequence (Speed Limits Only):**
 ```bash
-# Navigation with speed limits
-ros2 launch nav2_bringup navigation_launch.py use_sim_time:=false \
-  params_file:=src/perceptor/config/nav2_speed_params.yaml
+# Terminal 1: Robot base and LiDAR
+ros2 launch perceptor launch_robot.launch.py enable_camera:=false
+
+# Terminal 2: AMCL localization with main navigation map
+ros2 launch perceptor localization_launch.py \
+  map:=/home/pi/Roomba/slam_dev_ws/src/perceptor/maps/home.yaml \
+  params_file:=/home/pi/Roomba/slam_dev_ws/src/perceptor/config/nav2_params.yaml
+
+# Terminal 3: Navigation stack (path planning and controllers)
+ros2 launch perceptor navigation_launch.py \
+  params_file:=/home/pi/Roomba/slam_dev_ws/src/perceptor/config/nav2_params.yaml
+
+# Terminal 4: Speed limit extension (modular add-on)
+ros2 launch perceptor speed_extension.launch.py \
+  speed_mask:=/home/pi/Roomba/slam_dev_ws/src/perceptor/maps/speed_mask.yaml
+```
+
+**Combined Navigation Filters (Speed + Keepout Zones):**
+```bash
+# Terminal 4: Both speed limits and keepout zones
+ros2 launch perceptor navigation_filters.launch.py \
+  speed_mask:=/home/pi/Roomba/slam_dev_ws/src/perceptor/maps/speed_mask.yaml \
+  keepout_mask:=/home/pi/Roomba/slam_dev_ws/src/perceptor/maps/keepout_mask.yaml
+```
+
+**Speed Zone Mask Configuration:**
+Speed zones are defined using grayscale values in the mask image:
+- **White (255)**: Full speed (1.0x multiplier)
+- **Light Gray (192)**: 75% speed (0.75x multiplier)
+- **Medium Gray (128)**: 50% speed (0.5x multiplier)
+- **Dark Gray (64)**: 25% speed (0.25x multiplier)
+- **Black (0)**: Very slow (0.1x multiplier)
+
+**Verification Commands:**
+```bash
+# Check speed mask is loaded
+ros2 topic echo /speed_filter_mask --once
 
 # Monitor current speed limits
 ros2 topic echo /speed_limit
+
+# Verify costmap integration
+ros2 topic echo /global_costmap/costmap --once
+
+# Check speed filter info
+ros2 topic echo /speed_filter_info --once
+```
+
+**Architecture Benefits:**
+- **Modular Design**: Speed limits can be added/removed independently from navigation
+- **Simultaneous Filters**: Works alongside keepout zones without conflicts
+- **Dynamic Speed Control**: Real-time speed adjustments based on robot location
+- **Safety Enhancement**: Automatic speed reduction in sensitive areas
+
+**Technical Note - Speed Filter Behavior:**
+The speed filter operates by:
+- **Proportional Scaling**: Speed multipliers are applied based on mask grayscale values
+- **Real-time Updates**: Speed limits change dynamically as robot moves through zones
+- **Controller Integration**: Works with DWB local planner to enforce speed restrictions
+- **Smooth Transitions**: Gradual speed changes between zones prevent abrupt stops
+
+**Integration with Existing Systems:**
+- **Compatible with Keepout Zones**: Both filters can operate simultaneously
+- **Costmap Integration**: Speed zones appear as colored overlays in global costmap
+- **Parameter Inheritance**: Uses existing nav2_params.yaml with added speed filter configuration
+- **Lifecycle Management**: Independent lifecycle control for easy enable/disable
+
+**Expected Behavior:**
+- Robot automatically slows down when entering darker zones
+- Speed increases when moving to lighter zones
+- Path planning considers speed restrictions for optimal routes
+- Local controller respects speed limits during execution
+
+**Troubleshooting:**
+```bash
+# Check if speed filter is active in costmap
+ros2 param get /global_costmap/global_costmap plugins
+
+# Verify speed filter configuration
+ros2 param get /global_costmap/global_costmap speed_filter.enabled
+
+# Monitor speed filter topic subscriptions
+ros2 topic info /speed_filter_info --verbose
 ```
 
 **Multimedia Placeholders:**

@@ -1,0 +1,15 @@
+# Speed Zone Mask Configuration for Nav2 Speed Filter
+# This file defines the speed limit zones for the Perceptor robot
+#
+# TRINARY MODE: Converts grayscale pixels to 3 discrete OccupancyGrid values
+# Black pixels (0) → OccupancyGrid 0 (free) → Slow speed zones
+# White pixels (255) → OccupancyGrid 100 (occupied) → Fast speed zones
+# Gray pixels (90-166) → OccupancyGrid -1 (unknown) → Medium speed zones
+
+image: speed_mask.pgm
+mode: scale
+resolution: 0.05
+origin: [-1.47, -13.8, 0]
+negate: 0
+occupied_thresh: 1.0  # Pixels ≥ 255 become OccupancyGrid 100 (white pixels)
+free_thresh: 0.0      # Pixels ≤ 0 become OccupancyGrid 0 (black pixels)

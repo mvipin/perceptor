@@ -1,0 +1,29 @@
+# Speed Filter Info Server Configuration
+# This file configures the costmap filter info server for speed limit zones
+
+speed_filter_info_server:
+  ros__parameters:
+    use_sim_time: False
+
+    # Filter information topic
+    filter_info_topic: "/speed_filter_info"
+
+    # Speed mask topic and parameters
+    mask_topic: "/speed_filter_mask"
+
+    # Filter type - 1 for speed filter
+    type: 1
+
+    # Base value for inverted speed logic (minimum speed for black pixels)
+    base: 100.0
+
+    # Multiplier for inverted speed logic (speed range scaling)
+    # Formula: speed_percent = base + (occupancy_value * multiplier)
+    multiplier: -1.0
+
+    # Filter mask frame
+    mask_frame: "map"
+
+    # Whether to use the mask as a binary filter
+    # False = proportional scaling based on mask values (recommended for speed)
+    binary_filter: False
