@@ -100,10 +100,13 @@ ros2 run rviz2 rviz2 -d src/perceptor/config/main.rviz
 Nintendo Pro Controller → joy_node → teleop_node → twist_mux → create_driver → Robot Hardware
 ```
 
-### Multimedia Placeholders
-- 📹 **[Demo video of robot driving]** - Basic teleoperation demonstration
-- 📊 **[RQT graph showing control flow]** - Node and topic visualization
-- 🌳 **[TF tree diagram]** - Coordinate frame relationships
+### Demonstration Videos
+[![Basic Teleoperation Demo](https://img.youtube.com/vi/rfim3H5mtzY/maxresdefault.jpg)](https://youtube.com/shorts/rfim3H5mtzY)
+*Basic Teleoperation Demo - Nintendo Pro Controller with deadman switch and joystick control*
+
+### System Architecture Diagrams
+- 📊 **ROS Graph - Teleoperation**: ![ROS Graph Terminal 1](docs/media/images/system_architecture/ros_graph_teleoperation.png)
+- 🌳 **TF Tree - Basic Setup**: ![TF Tree Basic](docs/media/images/tf_frames/tf_tree_basic_teleoperation.png)
 
 ### Package Dependencies
 
@@ -191,9 +194,10 @@ RPLiDAR Hardware → rplidar_ros → /scan topic → SLAM/Navigation algorithms
                               TF: base_link → laser
 ```
 
-### Multimedia Placeholders
+### System Architecture Diagrams
+- 📊 **ROS Graph - Localization**: ![ROS Graph Terminal 2](docs/media/images/system_architecture/ros_graph_localization.png)
+- 🌳 **TF Tree - Navigation Stack**: ![TF Tree Navigation](docs/media/images/tf_frames/tf_tree_navigation_stack.png)
 - 📹 **[LiDAR scan visualization in RViz]** - Real-time laser scan data display
-- 🌳 **[TF tree with laser frame]** - Coordinate frame relationships including laser
 
 ### Package Dependencies
 
@@ -264,8 +268,11 @@ LiDAR (/scan) + Odometry (/odom) → slam_toolbox → Map (/map) + Pose (/tf: ma
 - Pose graph optimization for drift correction
 - Map serialization for persistent storage
 
-### Multimedia Placeholders
-- 📹 **[Real-time mapping demo video]** - SLAM in action during exploration
+### Demonstration Videos
+[![Real-time SLAM Mapping Demo](https://img.youtube.com/vi/ATwA-HLwSGA/maxresdefault.jpg)](https://www.youtube.com/watch?v=ATwA-HLwSGA)
+*Real-time SLAM Mapping Demo - Watch the robot build a complete house map in real-time*
+
+### System Architecture Diagrams
 - 🗺️ **[Generated map visualization]** - Example maps created in different environments
 
 ### Package Dependencies
@@ -340,8 +347,12 @@ Map    Costmaps    LiDAR + Odometry
 - Recovery behaviors for stuck situations
 - Multi-layered costmap system for safety
 
-### Multimedia Placeholders
-- 📹 **[Navigation demo video]** - Autonomous navigation to goal positions
+### Demonstration Videos
+[![Autonomous Navigation Demo](https://img.youtube.com/vi/_yviKw15OY4/maxresdefault.jpg)](https://www.youtube.com/watch?v=_yviKw15OY4)
+*Autonomous Navigation Demo - Sequential goal navigation with Nav2 path planning*
+
+### System Architecture Diagrams
+- 📊 **ROS Graph - Navigation Stack**: ![ROS Graph Terminal 3](docs/media/images/system_architecture/ros_graph_navigation.png)
 - 🌳 **[Nav2 behavior tree visualization]** - Decision-making process visualization
 
 ### Package Dependencies
@@ -485,9 +496,13 @@ ros2 topic echo /global_costmap/costmap --once
 ros2 topic echo /plan --once
 ```
 
-**Multimedia Placeholders:**
+**Demonstration Videos:**
+[![Keepout Zone Navigation Demo](https://img.youtube.com/vi/esaRK12SdbA/maxresdefault.jpg)](https://www.youtube.com/watch?v=esaRK12SdbA)
+*Keepout Zone Navigation Demo - Robot intelligently avoiding restricted areas*
+
+**System Architecture Diagrams:**
+- 📊 **ROS Graph - Keepout Zones**: ![ROS Graph Terminal 4 Keepout](docs/media/images/system_architecture/ros_graph_keepout_zones.png)
 - 📊 **[Configuration example screenshots]** - RViz visualization of keepout zones
-- 📹 **[Keepout zone navigation demo]** - Robot avoiding restricted areas
 
 **Reference:** [Nav2 Keepout Zones Tutorial](https://docs.nav2.org/tutorials/docs/navigation2_with_keepout_filter.html)
 
@@ -603,9 +618,13 @@ ros2 param get /global_costmap/global_costmap speed_filter.enabled
 ros2 topic info /speed_filter_info --verbose
 ```
 
-**Multimedia Placeholders:**
+**Demonstration Videos:**
+[![Variable Speed Navigation Demo](https://img.youtube.com/vi/KDUamMYnVzM/maxresdefault.jpg)](https://www.youtube.com/watch?v=KDUamMYnVzM)
+*Variable Speed Navigation Demo - Robot automatically adjusting speed in different zones*
+
+**System Architecture Diagrams:**
+- 📊 **ROS Graph - Speed Filter**: ![ROS Graph Terminal 4 Speed](docs/media/images/system_architecture/ros_graph_speed_filter.png)
 - 📊 **[Speed zone configuration screenshots]** - Map with color-coded speed areas
-- 📹 **[Variable speed navigation demo]** - Robot adapting speed to different zones
 
 **Reference:** [Nav2 Speed Filter Tutorial](https://docs.nav2.org/tutorials/docs/navigation2_with_speed_filter.html)
 
@@ -701,6 +720,10 @@ ros2 action list | grep waypoint
 - � **[RViz waypoint interface demo]** - Visual waypoint setting and execution
 - 📊 **[Multi-waypoint patrol screenshots]** - Complex route planning examples
 
+**Demonstration Videos:**
+[![Waypoint Navigation Demo](https://img.youtube.com/vi/LgVZ5oakM-A/maxresdefault.jpg)](https://www.youtube.com/watch?v=LgVZ5oakM-A)
+*Multi-Waypoint Navigation Demo - Visual point-and-click interface for sequential goal execution*
+
 **Reference:** [Nav2 Waypoint Follower Tutorial](https://docs.nav2.org/tutorials/docs/navigation2_with_waypoint_follower.html)
 
 ### Collision Monitor
@@ -776,9 +799,8 @@ aggressive_safety:
   slowdown_ratio: 0.6       # Moderate slow (60% speed)
 ```
 
-**Multimedia Placeholders:**
+**System Architecture Diagrams:**
 - 📊 **[Collision zone visualization screenshots]** - RViz display of safety polygons
-- 📹 **[Emergency stop demo video]** - Collision monitor preventing crashes
 
 **Reference:** [Nav2 Collision Monitor Tutorial](https://docs.nav2.org/tutorials/docs/navigation2_with_collision_monitor.html)
 
